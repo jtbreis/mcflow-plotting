@@ -20,12 +20,13 @@ def set_font(base_size=12):
         # Use built-in mathtext (no LaTeX needed)
         "text.usetex": False,
         "font.family": "serif",
-        "mathtext.fontset": "cm",      # Computer Modern math font
+        "mathtext.fontset": "cm",
         "axes.labelsize": base_size + 2,
         "xtick.labelsize": base_size,
         "ytick.labelsize": base_size,
-        "legend.fontsize": base_size,
+        "legend.fontsize": base_size - 2,
         "figure.titlesize": base_size + 4,
+        "image.cmap": "viridis",
         "lines.linewidth": 2,
     })
 
