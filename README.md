@@ -2,17 +2,17 @@
 
 Code for plotting in mcflow style: fonts, palettes, reusable figure helpers, and **hot-wire / pitot analysis** (HDF5 IO, calibration, longitudinal spectrum, Taylor scales) under `mcflow_plotting.hotwire`.
 
-Install (editable) using the **same Python environment** as Jupyter:
+Install (editable) from the repo root (see the workspace **README** for GitHub Codespaces and `requirements-dev.txt`):
 
 ```bash
 pip install -e ./mcflow-plotting
 ```
 
-If imports fail with ``(unknown location)`` or missing names, the kernel is usually a different env—reinstall there, or add the source tree to the path:
+If imports fail with ``(unknown location)`` or missing names, the interpreter is usually a different env—reinstall there, or add the source tree to the path:
 
 ```python
 import sys
-sys.path.insert(0, "/workspace/mcflow-plotting/src")  # adjust to your clone
+sys.path.insert(0, "/workspaces/hotwire_data_processing/mcflow-plotting/src")  # Codespaces path; adjust locally
 ```
 
 Example imports:
