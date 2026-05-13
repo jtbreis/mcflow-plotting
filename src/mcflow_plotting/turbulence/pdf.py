@@ -2,22 +2,24 @@ import matplotlib.pyplot as plt
 from scipy.stats import gaussian_kde
 import numpy as np
 from ..settings.standard import set_font, set_ticks_sig
+from ..style.colors import PDF_COLORS
 from scipy.stats import norm
 
 
 def plot_pdf(data, scale=1, unit='m/s', variable=['V'], labels=None, xlim=[-4, 4], title=None, output=None, name=None, figsize=(5, 4), log=False, fileformat='svg'):
-    colors = ['#003f5c', '#7a5195', '#ef5675', '#ffa600', '#5E3C99']
+    colors = list(PDF_COLORS)
 
     if not isinstance(data, list):
         data = [data]
 
-    plt.figure(figsize=figsize)
     set_font()
+    plt.figure(figsize=figsize)
     set_ticks_sig(ndigits=1)
     plt.xlabel(f'${variable}$ in $\mathrm{{{unit}}}$')
     plt.ylabel(rf'$\mathrm{{PDF}} \left( {variable} \right)$')
     plt.xlim(xlim)
-    plt.title(title)
+    if title:
+        plt.title(title, fontsize=12)
     if log is True:
         plt.yscale('log')
 
@@ -29,8 +31,14 @@ def plot_pdf(data, scale=1, unit='m/s', variable=['V'], labels=None, xlim=[-4, 4
             x_vals = np.linspace(dataset.min(),
                                  dataset.max(), 200)
             pdf_vals = kde(x_vals)
-            plt.plot(x_vals, pdf_vals,
-                     label=f'{labels[idx]}', color=colors[idx], alpha=0.8)
+            plt.plot(
+                x_vals,
+                pdf_vals,
+                label=f'{labels[idx]}',
+                color=colors[idx],
+                lw=1.6,
+                alpha=0.8,
+            )
 
             mean = dataset.mean()
             std = dataset.std()
@@ -51,12 +59,16 @@ def plot_pdf(data, scale=1, unit='m/s', variable=['V'], labels=None, xlim=[-4, 4
         )
 
     if labels is not None:
-        plt.legend(loc='best', fontsize=10)
+        plt.legend(loc='upper right', fontsize=8)
 
-    plt.tight_layout()
+    plt.tight_layout(pad=0.6)
     if output is not None:
-        plt.savefig(output+f'/plots/PDF_{name}.{fileformat}',
-                    format=fileformat, bbox_inches='tight')
+        plt.savefig(
+            output + f'/plots/PDF_{name}.{fileformat}',
+            format=fileformat,
+            bbox_inches='tight',
+            dpi=300,
+        )
     plt.show()
 
 
@@ -72,29 +84,45 @@ def plot_normalized_pdf(data, scale=1, variable='v', unit='m/s', title=None, out
                          data.max(), 200)
     pdf_vals = kde(x_vals)
 
-    plt.figure(figsize=figsize)
     set_font()
+    plt.figure(figsize=figsize)
     set_ticks_sig(ndigits=1)
-    plt.plot(x_vals, pdf_vals,
-             label=fr'$\mathrm{{PDF}}(\hat{{{variable}}})$', color='#003f5c')
+    plt.plot(
+        x_vals,
+        pdf_vals,
+        label=fr'$\mathrm{{PDF}}(\hat{{{variable}}})$',
+        color='#003f5c',
+        lw=1.6,
+    )
     x_norm = np.linspace(-4, 4, 200)
-    plt.plot(x_norm, norm.pdf(x_norm),
-             label='$N(0,1)$', linestyle='--', color='#ffa600')
-    plt.legend(loc='upper right')
+    plt.plot(
+        x_norm,
+        norm.pdf(x_norm),
+        label='$N(0,1)$',
+        linestyle='--',
+        color='#ffa600',
+        lw=1.6,
+    )
+    plt.legend(loc='upper right', fontsize=8)
     plt.xlabel(
         fr'$\left( {variable} - \langle {variable} \rangle \right) / \sigma_{{{variable}}}$')
     plt.ylabel(f'$\mathrm{{PDF}}(\hat{{{variable}}})$')
     plt.xlim(-4, 4)
     if log is True:
         plt.yscale('log')
-    plt.title(title)
+    if title:
+        plt.title(title, fontsize=12)
 
     plt.text(0.05, 0.95, fr"$\langle {variable} \rangle: {mean: .3f} \, \mathrm{{{unit}}}$" "\n" fr"$\sigma_{{{variable}}}: {std: .3f} \, \mathrm{{{unit}}}$", transform=plt.gca().transAxes,
              verticalalignment='top', bbox=dict(boxstyle='round', facecolor='white', alpha=0.7))
-    plt.tight_layout()
+    plt.tight_layout(pad=0.6)
     if output is not None:
         plt.savefig(
-            output+f'/plots/PDF_norm_{name}.{fileformat}', format=fileformat, bbox_inches='tight')
+            output + f'/plots/PDF_norm_{name}.{fileformat}',
+            format=fileformat,
+            bbox_inches='tight',
+            dpi=300,
+        )
     plt.show()
 
 
@@ -136,17 +164,17 @@ def plot_conditional_pdf(data_x, data_y, condition_bins, scale=1, unit='m/s',
     log : bool
         Whether to use log scale for y-axis.
     """
-    colors = ['#003f5c', '#7a5195', '#ef5675', '#ffa600', '#5E3C99']
+    colors = list(PDF_COLORS)
 
-    plt.figure(figsize=figsize)
     set_font()
+    plt.figure(figsize=figsize)
     set_ticks_sig(ndigits=1)
     plt.xlabel(f'${variable}$ in $\mathrm{{{unit}}}$')
     plt.ylabel(
         rf'$\mathrm{{PDF}} \left( {variable} \mid {condition_label} \right)$')
     plt.xlim(xlim)
     if title:
-        plt.title(title)
+        plt.title(title, fontsize=12)
     if log:
         plt.yscale('log')
 
@@ -165,10 +193,14 @@ def plot_conditional_pdf(data_x, data_y, condition_bins, scale=1, unit='m/s',
             f'{condition_bins[i]:.2f} ≤ {condition_label} < {condition_bins[i+1]:.2f}'
         )
 
-        plt.plot(x_vals, pdf_vals,
-                 label=label,
-                 color=colors[i % len(colors)],
-                 alpha=0.8)
+        plt.plot(
+            x_vals,
+            pdf_vals,
+            label=label,
+            color=colors[i % len(colors)],
+            lw=1.6,
+            alpha=0.8,
+        )
 
         mean = subset.mean()
         std = subset.std()
@@ -185,12 +217,16 @@ def plot_conditional_pdf(data_x, data_y, condition_bins, scale=1, unit='m/s',
     #         bbox=dict(boxstyle='round', facecolor='white', alpha=0.7)
     #     )
 
-    plt.legend(loc='best', fontsize=10)
-    plt.tight_layout()
+    plt.legend(loc='upper right', fontsize=8)
+    plt.tight_layout(pad=0.6)
 
     if output and name:
-        plt.savefig(f'{output}/plots/ConditionalPDF_{name}.svg',
-                    format='svg', bbox_inches='tight')
+        plt.savefig(
+            f'{output}/plots/ConditionalPDF_{name}.svg',
+            format='svg',
+            bbox_inches='tight',
+            dpi=300,
+        )
 
     plt.show()
 
@@ -231,10 +267,10 @@ def plot_conditional_normalized_pdf(data_x, data_y, condition_bins, scale=1,
     log : bool, optional
         Whether to use log scale on the y-axis.
     """
-    colors = ['#003f5c', '#7a5195', '#ef5675', '#ffa600', '#5E3C99']
+    colors = list(PDF_COLORS)
 
-    plt.figure(figsize=figsize)
     set_font()
+    plt.figure(figsize=figsize)
     set_ticks_sig(ndigits=1)
     plt.xlabel(
         fr'$\left( {variable} - \langle {variable} \rangle \right) / \sigma_{{{variable}}}$')
@@ -242,7 +278,7 @@ def plot_conditional_normalized_pdf(data_x, data_y, condition_bins, scale=1,
         rf'$\mathrm{{PDF}} \left( \hat{{{variable}}} \mid {condition_label} \right)$')
     plt.xlim(-4, 4)
     if title:
-        plt.title(title)
+        plt.title(title, fontsize=12)
     if log:
         plt.yscale('log')
 
@@ -265,8 +301,14 @@ def plot_conditional_normalized_pdf(data_x, data_y, condition_bins, scale=1,
             f'{condition_bins[i]:.2f} ≤ {condition_label} < {condition_bins[i+1]:.2f}'
         )
 
-        plt.plot(x_vals, pdf_vals, label=label,
-                 color=colors[i % len(colors)], alpha=0.8)
+        plt.plot(
+            x_vals,
+            pdf_vals,
+            label=label,
+            color=colors[i % len(colors)],
+            lw=1.6,
+            alpha=0.8,
+        )
 
         annotations.append(
             f"{label}\n"
@@ -276,8 +318,14 @@ def plot_conditional_normalized_pdf(data_x, data_y, condition_bins, scale=1,
 
     # Overlay standard normal for reference
     x_norm = np.linspace(-4, 4, 200)
-    plt.plot(x_norm, norm.pdf(x_norm),
-             label='$N(0,1)$', linestyle='--', color='#ffa600')
+    plt.plot(
+        x_norm,
+        norm.pdf(x_norm),
+        label='$N(0,1)$',
+        linestyle='--',
+        color='#ffa600',
+        lw=1.6,
+    )
 
     if annotations:
         plt.gcf().text(
@@ -286,13 +334,15 @@ def plot_conditional_normalized_pdf(data_x, data_y, condition_bins, scale=1,
             bbox=dict(boxstyle='round', facecolor='white', alpha=0.7)
         )
 
-    plt.legend(loc='upper right', fontsize=10)
-    plt.tight_layout()
+    plt.legend(loc='upper right', fontsize=8)
+    plt.tight_layout(pad=0.6)
 
     if output and name:
         plt.savefig(
             f'{output}/plots/ConditionalPDF_norm_{name}.svg',
-            format='svg', bbox_inches='tight'
+            format='svg',
+            bbox_inches='tight',
+            dpi=300,
         )
 
     plt.show()

@@ -5,6 +5,8 @@ from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 from scipy.spatial import ConvexHull
 from mpl_toolkits.mplot3d.art3d import Line3DCollection
 
+from ..settings.standard import set_font
+
 
 def compute_voronoi(points, bbox=[-1, 1, -1, 1, -1, 1]):
     Lx = bbox[1] - bbox[0]
@@ -56,10 +58,11 @@ def compute_voronoi(points, bbox=[-1, 1, -1, 1, -1, 1]):
 
 
 def plot_voronoi(points, bbox=[-1, 1, -1, 1, -1, 1]):
+    set_font()
     fig = plt.figure()
     ax = fig.add_subplot(projection="3d")
-    ax.scatter(points[:, 0], points[:, 1], points[:, 2])
-    ax.set_title("Points")
+    ax.scatter(points[:, 0], points[:, 1], points[:, 2], c='#003f5c', s=12)
+    ax.set_title("Points", fontsize=12)
     ax.set_xlim(bbox[0], bbox[1])
     ax.set_ylim(bbox[2], bbox[3])
     ax.set_zlim(bbox[3], bbox[4])
@@ -153,9 +156,19 @@ def plot_voronoi(points, bbox=[-1, 1, -1, 1, -1, 1]):
     # ax.set_xlim(bbox[0], bbox[1])
     # ax.set_ylim(bbox[2], bbox[3])
     # ax.set_zlim(bbox[4], bbox[5])
-    ax.set_title("3D Voronoi cells")
+    ax.set_title("3D Voronoi cells", fontsize=12)
+    plt.tight_layout(pad=0.6)
     plt.show()
 
-    plt.hist(voro.volumes)
-    plt.title("Voronoi cell volumes")
+    plt.figure()
+    plt.hist(
+        voro.volumes,
+        color='#003f5c',
+        alpha=0.35,
+        edgecolor='0.25',
+        linewidth=0.4,
+    )
+    plt.title("Voronoi cell volumes", fontsize=12)
+    plt.grid(True, alpha=0.25)
+    plt.tight_layout(pad=0.6)
     plt.show()

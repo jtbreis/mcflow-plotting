@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 
 
 class Enum():
-    linewidth = 2
+    linewidth = 1.6
     colormap = 'viridis'
 
 
@@ -22,12 +22,14 @@ def set_font(base_size=12):
         "font.family": "serif",
         "mathtext.fontset": "cm",
         "axes.labelsize": base_size + 2,
+        "axes.titlesize": 12,
         "xtick.labelsize": base_size,
         "ytick.labelsize": base_size,
-        "legend.fontsize": base_size - 2,
+        "legend.fontsize": 8,
         "figure.titlesize": base_size + 4,
         "image.cmap": "viridis",
-        "lines.linewidth": 2,
+        # Match flow-condition PDF scripts (explicit lw still overrides when needed)
+        "lines.linewidth": 1.6,
     })
 
 
